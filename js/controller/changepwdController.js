@@ -1,8 +1,8 @@
  var changepwd = pulseapp.controller('changepwd', function ($scope, $rootScope,BlockChainData,ngProgressFactory,$mdDialog,$mdToast) {
   
- 
+ $scope.progressbar = ngProgressFactory.createInstance();
   $scope.save = function(){
-    //($scope.oldpwd);
+   $scope.progressbar.start();
     if($scope.pwdchange == $scope.pwdconfirmChange && $scope.oldpwd != ''){
 
       if($rootScope.userStatus == 'Admin'){
@@ -13,16 +13,33 @@
       }else{
           $scope.requestParam={oldPassword:$scope.oldpwd,newPassword:$scope.pwdchange}; 
       $scope.serviceType="user/changePassword";
-        BlockChainData.putData($scope.requestParam,$scope.serviceType,$scope.OnSuccesschangePwd,$scope.OnFailurechangePwd); 
+        BlockChainData.postData($scope.requestParam,$scope.serviceType,$scope.OnSuccesschangePwd,$scope.OnFailurechangePwd); 
       }
 
       
     }else{
-      alert("Passwrod Error! Please Try Again")
+      alert("Password Error! Please Try Again")
     }
   }
 
-  $scope.showSimpleToast = function(text) {
+  
+  $scope.OnSuccesschangePwd = function(response){
+$scope.progressbar.complete();
+$scope.showSimpleToast('PassWord Changed!');
+ $mdDialog.cancel();
+  }
+
+  $scope.OnFailurechangePwd = function(){
+$scope.progressbar.complete();
+    $scope.showSimpleToast("Error Try Again");
+    // $mdDialog.cancel();
+  }
+
+ $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+   
+$scope.showSimpleToast = function(text) {
 
     $mdToast.show(
       $mdToast.simple()
@@ -31,19 +48,6 @@
         .hideDelay(3000)
     );
   };
-
-  $scope.OnSuccesschangePwd = function(response){
-
-showSimpleToast('PassWord Changed!');
-  }
-
-  $scope.OnFailurechangePwd = function(){
-
-    showSimpleToast("Error Try Again");
-  }
-
- 
-   
 
 
 });

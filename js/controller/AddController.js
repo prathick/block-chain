@@ -1,6 +1,16 @@
+ 
+
  var addController = pulseapp.controller('addController', function ($scope, $rootScope,BlockChainData,ngProgressFactory,$window,$mdDialog,$mdToast) {
-    	 $scope.progressbar = ngProgressFactory.createInstance();
-       $scope.addEvent = function(){
+  
+
+  $scope.progressbar = ngProgressFactory.createInstance();
+  
+$scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+  $scope.addEvent = function(){
+
   $scope.progressbar.start();
   $scope.requestParam={event_name:$scope.eventName,description:$scope.eventDesc,venue:$scope.eventVenue,numberOfTickets:$scope.eventTks,priceOfTicket:$scope.eventPrice}; 
   $scope.serviceType="eventmanager/createEvent";
@@ -19,7 +29,7 @@
 
   }
 
-$scope.OnSuccessAddEvent = function(response){
+$scope.OnFailureAddEvent = function(){
 
     $scope.progressbar.complete();
      $scope.showSimpleToast('Add Event Failed');
